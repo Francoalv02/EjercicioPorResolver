@@ -20,34 +20,39 @@ namespace PryAlvarezER
 
         private void btnAceptar_Click(object sender, EventArgs e)
         {
-            decimal varNro;
+            //variables
             string varnombreCliente;
-
-
+            int id = 1;
             varnombreCliente = txtNombreCliente.Text;
-            varNro = nudNroCliente.Value;
-            
 
-            StreamWriter clientes = new StreamWriter("./Clientes.txt", true);
-            clientes.Close();
-
-            if (txtNombreCliente.Text != "" && nudNroCliente.Value != 0)
+            //SE CREA EL ARCHIVO
+            char separador = Convert.ToChar(",");
+            StreamWriter sr = new StreamWriter("./cliente.txt", true);
+            sr.Close();
+            StreamReader sr2 = new StreamReader("./cliente.txt");
+            //CONTADOR GENERADOR DEL iD
+            while (!sr2.EndOfStream)
             {
+                string[] arr = sr2.ReadLine().Split(separador);
+                string id2 = arr[0];
+                id = Convert.ToInt32(id2) + 1; 
+            }
+            sr2.Close();
 
-                MessageBox.Show("Datos cargados correctamente", "Validado", MessageBoxButtons.OK, MessageBoxIcon.None);
+            //SI VAR CLIENTES ES DISTINTO DE VACIO CARGAR LOS DATOS EN ARCHIVO
+            if (varnombreCliente != "")
+            {
+                using (StreamWriter sw = File.AppendText("./cliente.txt"))
+                {
+                    sw.WriteLine(id + "," + varnombreCliente);
+                    sw.Close();
+                }
                 txtNombreCliente.Text = "";
-                nudNroCliente.Value = 0;
-
-                txtNombreCliente.Focus();
+                MessageBox.Show("Datos Cargados Correctamente");
             }
             else
             {
-                MessageBox.Show("ERROR, llene los datos correctamente");
-            }
-
-            using (StreamWriter swClientes = File.AppendText("./Clientes.txt"))
-            {
-                swClientes.WriteLine(varNro + " , " + varnombreCliente);
+                MessageBox.Show("error,Complete todos los datos");
             }
 
         }

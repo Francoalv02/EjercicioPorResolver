@@ -21,45 +21,51 @@ namespace PryAlvarezER
 
         private void btnAceptar_Click(object sender, EventArgs e)
         {
-            decimal varNro;
-            string varnombreCliente, varActivo ,varComision;
+            //variables
+            string varNombreVendedor, varActivo ,varComision;
+            int id = 1;
 
-
-
-            varnombreCliente = txtNombreCliente.Text;
-            varNro = nudCliente.Value;
+            varNombreVendedor = txtNombreVendedor.Text;
             varActivo = cbActivo.Text;
             varComision = cbComision.Text;
 
+            //se crean los archivos
+   
+            char separador = Convert.ToChar(",");
+            StreamWriter sr = new StreamWriter("./Vendedor.txt", true);
+            sr.Close();
+            StreamReader sr2 = new StreamReader("./Vendedor.txt");
 
-            StreamWriter vendedor = new StreamWriter("./Vendedor.txt", true);
-            vendedor.Close();
-
-            if (txtNombreCliente.Text != "" && nudCliente.Value != 0 && cbActivo.Text != "" && cbComision.Text != "") 
+            //contador generador deL id
+            while (!sr2.EndOfStream)
             {
-                
-                MessageBox.Show("Datos cargados correctamente", "Validado", MessageBoxButtons.OK, MessageBoxIcon.None);
-                txtNombreCliente.Text = "";
-                nudCliente.Value = 0;
-                cbActivo.Text = "";
-                cbComision.Text = "";
+                string[] arr = sr2.ReadLine().Split(separador);
+                string id2 = arr[0];
+                id = Convert.ToInt32(id2) + 1;
+            }
+            sr2.Close();
 
-                txtNombreCliente.Focus();
+            //SI EL NOMBRE ES INDISTINTO DE VACIO,CARGAR LOS DATOS CORRECTAMENTE
+            if (varNombreVendedor != "")
+            {
+                using (StreamWriter sw = File.AppendText("./Vendedor.txt"))
+                {
+                    sw.WriteLine(id + "," + varNombreVendedor + "," + varActivo + "," + varComision);
+                    sw.Close();
+                }
+                txtNombreVendedor.Text = "";
+                MessageBox.Show("Datos Cargados Correctamente");
             }
             else
             {
-                MessageBox.Show("ERROR, llene los datos correctamente");
-            }
-                
-
-
-            using (StreamWriter swClientes = File.AppendText("./Vendedor.txt"))
-            {
-                swClientes.WriteLine(varNro + " , " + varnombreCliente + " , " + varActivo + " , " + varComision);
+                MessageBox.Show("Error,Complete todos los datos");
             }
 
-            
-            
+        }
+
+        private void frmVendedor_Load(object sender, EventArgs e)
+        {
+
         }
     }
 }
